@@ -3,7 +3,13 @@ import RPi.GPIO as GPIO
 import MFRC522
 import urllib.request
 
+buttonPin = 12 #define buttonPin
+
 mfrc = MFRC522.MFRC522()
+
+def setup():
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(buttonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def loop():
     isScan = True
@@ -24,9 +30,13 @@ def destroy():
     GPIO.cleanup()
     
 if __name__ == "__main__":
-    print("Starting scan...")
+    print("Push button to start scan...")
+    setup()
     try:
-        loop()
+        while True:
+            if GPIO.input(buttonPin)==GPIO.LOW:
+                print("scanning....")
+                loop()
     except Exception as e:
         print("programm aborting due to exception. ")
         print(e)
